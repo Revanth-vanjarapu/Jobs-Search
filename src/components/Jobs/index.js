@@ -26,6 +26,7 @@ class Jobs extends Component {
     searchInput: '',
     activeSalaryRangeId: '',
     employmentTypesChecked: [],
+    locationChecked: [],
   }
 
   componentDidMount() {
@@ -47,14 +48,30 @@ class Jobs extends Component {
     this.setState({employmentTypesChecked: updatedList}, this.getJobs)
   }
 
+  updateLocationChecked = locId => {
+    const {locationChecked} = this.state
+    let updatedList = locationChecked
+    if (locationChecked.includes(locId)) {
+      updatedList = locationChecked.filter(eachType => eachType !== locId)
+    } else {
+      updatedList = [...updatedList, locId]
+    }
+
+    this.setState({locationChecked: updatedList}, this.getJobs)
+  }
+
   updateSalaryRangeId = activeSalaryRangeId =>
     this.setState({activeSalaryRangeId}, this.getJobs)
 
   getJobs = async () => {
     this.setState({jobsApiStatus: apiStatusConstants.inProgress})
 
-    const {activeSalaryRangeId, employmentTypesChecked, searchInput} =
-      this.state
+    const {
+      activeSalaryRangeId,
+      employmentTypesChecked,
+      searchInput,
+    } = this.state
+
     const employTypes = employmentTypesChecked.join(',')
     const jwtToken = Cookies.get('jwt_token')
     const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${employTypes}&minimum_package=${activeSalaryRangeId}&search=${searchInput}`
@@ -146,6 +163,7 @@ class Jobs extends Component {
       profileApiStatus,
       activeSalaryRangeId,
       employmentTypesChecked,
+      locationChecked,
     } = this.state
     return (
       <div className="side-bar">
@@ -161,6 +179,8 @@ class Jobs extends Component {
           activeSalaryRangeId={activeSalaryRangeId}
           updateEmploymentTypesChecked={this.updateEmploymentTypesChecked}
           employmentTypesChecked={employmentTypesChecked}
+          locationChecked={locationChecked}
+          updateLocationChecked={this.updateLocationChecked}
         />
       </div>
     )
@@ -181,14 +201,20 @@ class Jobs extends Component {
   )
 
   renderJobsList = () => {
-    const {jobsList} = this.state
+    const {jobsList, locationChecked} = this.state
     return (
       <>
         {jobsList.length > 0 ? (
           <ul className="jobs-list">
-            {jobsList.map(eachJob => (
-              <JobCard key={eachJob.id} jobDetails={eachJob} />
-            ))}
+            {jobsList
+              .filter(eachJob =>
+                locationChecked.length === 0
+                  ? true
+                  : locationChecked.includes(eachJob.location),
+              )
+              .map(eachJob => (
+                <JobCard key={eachJob.id} jobDetails={eachJob} />
+              ))}
           </ul>
         ) : (
           this.renderNoJobsView()

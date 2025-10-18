@@ -1,4 +1,14 @@
-In this project, let's build a **Jobby App** by applying the concepts we have learned till now.
+In this project, let's build a **Jobby App** by applying the concepts i have learned till now.
+
+## 🚀 Demo Access
+
+Use the following credentials to log in and explore the app:
+
+**Username:** `rahul`  
+**Password:** `rahul@2021`
+
+🔗 [Live Demo on Vercel](https://vercel.com/new/import?framework=create-react-app&hasTrialAvailable=1&project-name=jobs-search&remainingProjects=1&s=https%3A%2F%2Fgithub.com%2FRevanth-vanjarapu%2FJobs-Search&teamSlug=coustom-codes-projects&totalProjects=1)
+
 
 ### Refer to videos below:
 
